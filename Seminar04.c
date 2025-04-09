@@ -83,8 +83,12 @@ void adaugaMasinaInLista(N** lista, Masina masinaNoua) {
 	}
 }
 
-void adaugaLaInceputInLista(/*lista de masini*/ Masina masinaNoua) {
+void adaugaLaInceputInLista(N** lista, Masina masinaNoua) {
 	//adauga la inceputul listei o noua masina pe care o primim ca parametru
+	N* nodNou = (N*)malloc(sizeof(N));
+	nodNou->info = masinaNoua;
+	nodNou->next = *lista;
+	*lista = nodNou;
 }
 
 N* citireListaMasiniDinFisier(const char* numeFisier) {
@@ -137,9 +141,43 @@ float calculeazaPretMediu(N* lista) {
 	return suma/contor;
 }
 
-void stergeMasiniDinSeria(/*lista masini*/ char serieCautata) {
+void stergeMasiniDinSeria(N** lista, char serieCautata) {
 	//sterge toate masinile din lista care au seria primita ca parametru.
 	//tratati situatia ca masina se afla si pe prima pozitie, si pe ultima pozitie
+
+	while ((*lista) != NULL && serieCautata == (*lista)->info.serie) { //e prima masina
+		N* aux = (*lista);
+		*lista = (*lista)->next;
+		if (aux->info.numeSofer) {
+			free(aux->info.numeSofer);
+		}
+		if (aux->info.model) {
+			free(aux->info.model);
+		}
+		free(aux);
+	}
+
+	if (*lista) {
+		N* p = *lista;
+		while (p) {
+			while (p->next && p->next->info.serie != serieCautata) {
+				p = p->next;
+			}
+			if (p->next) { //e la mijloc
+				N* aux = p->next;
+				p->next = aux->next;
+				if (aux->info.numeSofer) {
+					free(aux->info.numeSofer);
+				}
+				if (aux->info.model) {
+					free(aux->info.model);
+				}
+			}
+			else { //e ultima masina
+				p = NULL;
+			}
+		}
+	}
 }
 
 float calculeazaPretulMasinilorUnuiSofer(N* lista, const char* numeSofer) {
