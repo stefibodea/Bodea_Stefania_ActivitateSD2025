@@ -40,11 +40,11 @@ Masina citireMasinaDinFisier(FILE* file) {
 	m1.nrUsi = atoi(strtok(NULL, sep));
 	m1.pret = atof(strtok(NULL, sep));
 	aux = strtok(NULL, sep);
-	m1.model = malloc(strlen(aux) + 1);
+	m1.model = (char*)malloc(strlen(aux) + 1);
 	strcpy_s(m1.model, strlen(aux) + 1, aux);
 
 	aux = strtok(NULL, sep);
-	m1.numeSofer = malloc(strlen(aux) + 1);
+	m1.numeSofer = (char*)#inmalloc(strlen(aux) + 1);
 	strcpy_s(m1.numeSofer, strlen(aux) + 1, aux);
 
 	m1.serie = *strtok(NULL, sep);
