@@ -232,6 +232,30 @@ void dezalocareVectorMasini(Masina* vectorMasini, int nrMasini) {
 	}
 }
 
+void interschimbareDouaNoduri(Nod* cap, int pozitie1, int pozitie2) {
+	Nod* temp1 = cap;
+	Nod* temp2 = cap;
+	int i = 0;
+
+	while (temp1 != NULL && i < pozitie1) {
+		temp1 = temp1->next;
+		i++;
+	}
+
+	i = 0;
+	while (temp2 != NULL && i < pozitie2) {
+		temp2 = temp2->next;
+		i++;
+	}
+
+	if (temp1 != NULL && temp2 != NULL) {
+		Masina aux = temp1->info;
+		temp1->info = temp2->info;
+		temp2->info = aux;
+	}
+}
+
+
 int main() {
 	Nod* cap = citireListaMasiniDinFisier("masini.txt");
 	afisareListaDeMasini(cap);
@@ -252,5 +276,14 @@ int main() {
 	Masina* vectorMasini = masiniCuMaiMultDeUnNumarDeUsiDat(cap, &nrMasini, nrUsiDat);
 	afisareVectorMasini(vectorMasini, nrMasini);
 	dezalocareVectorMasini(vectorMasini, nrMasini);
+
+	int pozitie1, pozitie2;
+	printf("Introdu doua pozitii pentru interschimbare: ");
+	scanf("%d%d", &pozitie1, &pozitie2);
+
+	interschimbareDouaNoduri(cap, pozitie1, pozitie2);
+	printf("Lista dupa interschimbare:\n");
+	afisareListaDeMasini(cap);
+
 	dezalocareListaDeMasini(&cap);
 }
