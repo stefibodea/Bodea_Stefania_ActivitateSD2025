@@ -105,7 +105,6 @@ Nod* citireListaMasiniDinFisier(const char* numeFisier) { //returneaza adresa pr
 	return cap;
 }
 
-
 void stergereNodDupaPozitie(int pozitie, Nod** cap) {
 
 	if (*cap == NULL) {
@@ -139,7 +138,6 @@ void stergereNodDupaPozitie(int pozitie, Nod** cap) {
 	}
 }
 
-
 void afisareMasina(Masina m) {
 	printf("id: %d\n", m.id);
 	printf("nr usi: %d\n", m.nrUsi);
@@ -170,6 +168,70 @@ void dezalocareListaDeMasini(Nod** cap) {
 	}
 }
 
+
+Masina* masiniCuMaiMultDeUnNumarDeUsiDat(Nod* cap, int* nrMasini, int nrUsiDat) {
+	Nod* temp = cap;
+	
+	*nrMasini = 0;
+	while (temp != NULL)  {
+		if (temp->info.nrUsi > nrUsiDat) {
+			(*nrMasini)++;
+		}
+		temp = temp->next;
+	}
+
+	Masina* vectorMasini = (Masina*)malloc(sizeof(Masina) * (*nrMasini));
+	temp = cap;
+	int i = 0;
+	while (temp != NULL) {
+		if (temp->info.nrUsi > nrUsiDat) {
+			vectorMasini[i].id = temp->info.id;
+
+			vectorMasini[i].model = (char*)malloc(strlen(temp->info.model) + 1);
+			strcpy_s(vectorMasini[i].model, strlen(temp->info.model) + 1, temp->info.model);
+
+			vectorMasini[i].nrUsi = temp->info.nrUsi;
+
+			vectorMasini[i].numeSofer = (char*)malloc(strlen(temp->info.numeSofer) + 1);
+			strcpy_s(vectorMasini[i].numeSofer, strlen(temp->info.numeSofer) + 1, temp->info.numeSofer);
+
+			vectorMasini[i].pret = temp->info.pret;
+			vectorMasini[i].serie = temp->info.serie;
+			
+			i++;
+		}
+		temp = temp->next;
+	}
+	return vectorMasini;
+}
+
+void afisareVectorMasini(Masina* vectorMasini, int nrMasini) {
+	if (vectorMasini != NULL) {
+		for (int i = 0; i < nrMasini; i++) {
+			printf("Masina %d:\n", i + 1);
+			printf("id: %d, ", vectorMasini[i].id);
+			printf("nr usi: %d, ", vectorMasini[i].nrUsi);
+			printf("pret: %.2f, ", vectorMasini[i].pret);
+			printf("model: %s, ", vectorMasini[i].model);
+			printf("nume sofer: %s, ", vectorMasini[i].numeSofer);
+			printf("serie: %c\n\n", vectorMasini[i].serie);
+		}
+	}
+	else {
+		printf("Vectorul de masini este gol.\n");
+	}
+}
+
+void dezalocareVectorMasini(Masina* vectorMasini, int nrMasini) {
+	if (vectorMasini != NULL) {
+		for (int i = 0; i < nrMasini; i++) {
+			free(vectorMasini[i].model);
+			free(vectorMasini[i].numeSofer);
+		}
+		free(vectorMasini);
+	}
+}
+
 int main() {
 	Nod* cap = citireListaMasiniDinFisier("masini.txt");
 	afisareListaDeMasini(cap);
@@ -182,5 +244,13 @@ int main() {
 	stergereNodDupaPozitie(pozitie, &cap);
 	afisareListaDeMasini(cap);
 
+	int nrUsiDat, nrMasini = 0;
+	
+	printf("Sa se afiseze masinile cu mai mult de ");
+	scanf("%d", &nrUsiDat);
+	printf(" usi: \n");
+	Masina* vectorMasini = masiniCuMaiMultDeUnNumarDeUsiDat(cap, &nrMasini, nrUsiDat);
+	afisareVectorMasini(vectorMasini, nrMasini);
+	dezalocareVectorMasini(vectorMasini, nrMasini);
 	dezalocareListaDeMasini(&cap);
 }
