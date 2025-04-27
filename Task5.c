@@ -1,3 +1,5 @@
+//1. Implementati o functie care sterge un nod de pe o pozitie data ca parametru.Daca lista
+//are mai putine noduri decat index - ul dat, nu se realizeaza stergerea.
 //2. Implementati o functie care sa insereze elementele in cadrul listei simplu inlantuite astfel
 //incat acestea a fie sortate crescator dupa un camp la alegerea voastra.
 //3. Implementati o functie care salveaza intr - un vector toate obiectele care indeplinesc o
@@ -28,41 +30,6 @@ struct Nod {
 	struct Nod* next;
 };
 typedef struct Nod Nod;
-
-//1. Implementati o functie care sterge un nod de pe o pozitie data ca parametru.Daca lista
-//are mai putine noduri decat index - ul dat, nu se realizeaza stergerea.
-void stergereNodDupaPozitie(int pozitie, Nod** cap) {
-
-	if (*cap == NULL) {
-		printf("Lista este goala.\n");
-	}
-	else {
-		Nod* temp;
-		Nod* nodDeSters;
-		temp = *cap;
-		if (pozitie == 0) { //prima pozitie
-			(*cap) = (*cap)->next;
-			free(temp->info.model);
-			free(temp->info.numeSofer);
-			free(temp);
-		}
-		else { //la mijloc
-			for (int i = 0; temp != NULL && i < pozitie - 1; i++) {
-				temp = temp->next;
-			}
-			if (temp->next == NULL) { //pozitia data > nr de noduri din lista
-				printf("Am parcurs toata lista fara sa gasim indexul dat.");
-			}
-			else { 
-				nodDeSters = temp->next;
-				temp->next = nodDeSters->next;
-				free(nodDeSters->info.model);
-				free(nodDeSters->info.numeSofer);
-				free(nodDeSters);
-			}	
-		}
-	}
-}
 
 Masina citireMasinaDinFisier(FILE* file) {
 	Masina m;
@@ -98,25 +65,80 @@ Masina citireMasinaDinFisier(FILE* file) {
 void adaugaMasinaInLista(Nod** cap, Masina m) {
 	Nod* nodNou = (Nod*)malloc(sizeof(Nod));
 
-    nodNou->info = m;
-    nodNou->next =  (*cap);
+	nodNou->info = m;
+	nodNou->next = (*cap);
 	*cap = nodNou;
+}
+
+void adaugaMasiniInListaDupaPret(Nod** cap, Masina m) {
+	Nod* nodNou = (Nod*)malloc(sizeof(Nod));
+	nodNou->info = m;
+	nodNou->next = NULL;
+
+	if (*cap == NULL || (*cap)->info.pret > m.pret) { //daca lista e goala sau primul nod are pretul mai mare, inseram la inceput
+		nodNou->next = *cap;
+		(*cap) = nodNou;
+	}
+	else {//ne oprim inainte primului nod cu pretul mai mare - inseram intre temp si temp->next
+		Nod* temp = *cap;
+		while (temp->next != NULL && temp->next->info.pret < m.pret) {
+			temp = temp->next;
+		}
+		nodNou->next = temp->next;
+		temp->next = nodNou;
+	}
 }
 
 Nod* citireListaMasiniDinFisier(const char* numeFisier) { //returneaza adresa primului nod din lista
 	FILE* f = fopen(numeFisier, "r");
 	Nod* cap = NULL;
-	
+
 	if (f) {
 		while (!feof(f)) {
 			Masina m;
 			m = citireMasinaDinFisier(f);
-			adaugaMasinaInLista(&cap, m);
+			//adaugaMasinaInLista(&cap, m);
+			adaugaMasiniInListaDupaPret(&cap, m);
 		}
 	}
 	fclose(f);
 	return cap;
 }
+
+
+void stergereNodDupaPozitie(int pozitie, Nod** cap) {
+
+	if (*cap == NULL) {
+		printf("Lista este goala.\n");
+	}
+	else {
+		Nod* temp;
+		Nod* nodDeSters;
+		temp = *cap;
+		if (pozitie == 0) { //prima pozitie
+			(*cap) = (*cap)->next;
+			free(temp->info.model);
+			free(temp->info.numeSofer);
+			free(temp);
+		}
+		else { //la mijloc
+			for (int i = 0; temp != NULL && i < pozitie - 1; i++) {
+				temp = temp->next;
+			}
+			if (temp->next == NULL) { //pozitia data > nr de noduri din lista
+				printf("Am parcurs toata lista fara sa gasim indexul dat.\n");
+			}
+			else { 
+				nodDeSters = temp->next;
+				temp->next = nodDeSters->next;
+				free(nodDeSters->info.model);
+				free(nodDeSters->info.numeSofer);
+				free(nodDeSters);
+			}	
+		}
+	}
+}
+
 
 void afisareMasina(Masina m) {
 	printf("id: %d\n", m.id);
