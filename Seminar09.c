@@ -3,9 +3,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-//trebuie sa folositi fisierul masini.txt
-//sau va creati un alt fisier cu alte date
-
 struct StructuraMasina {
 	int id;
 	int nrUsi;
@@ -16,7 +13,6 @@ struct StructuraMasina {
 };
 typedef struct StructuraMasina Masina;
 
-//creare structura pentru un nod dintr-un arbore binar de cautare
 struct Nod {
 	Masina info;
 	struct Nod* st;
@@ -55,7 +51,6 @@ void afisareMasina(Masina masina) {
 	printf("Serie: %c\n\n", masina.serie);
 }
 
-
 void adaugaMasinaInArbore(Nod** arbore, Masina masinaNoua) {
 	if (!(*arbore)) {
 		Nod* nodNou = (Nod*)malloc(sizeof(Nod));
@@ -83,13 +78,6 @@ Nod* citireArboreDeMasiniDinFisier(const char* numeFisier) {
 	}
 	fclose(f);
 	return arbore;
-}
-
-void afisareMasiniDinArbore(/*arbore de masini*/) {
-	//afiseaza toate elemente de tip masina din arborele creat
-	//prin apelarea functiei afisareMasina()
-	//parcurgerea arborelui poate fi realizata in TREI moduri
-	//folositi toate cele TREI moduri de parcurgere
 }
 
 void afisareInOrdine(Nod* arbore) {
@@ -145,19 +133,25 @@ Masina getMasinaByID(Nod* arbore, int id) {
 	return m;
 }
 
-int determinaNumarNoduri(/*arborele de masini*/) {
-	//calculeaza numarul total de noduri din arborele binar de cautare
-	return 0;
+int determinaNumarNoduri(Nod* arbore) {
+	if(arbore == NULL) {
+		return 0;
+	}
+	int numarStanga = determinaNumarNoduri(arbore->st);
+	int numarDreapta = determinaNumarNoduri(arbore->dr);
+	return 1 + numarStanga + numarDreapta;
 }
 
-int calculeazaInaltimeArbore(/*arbore de masini*/) {
-	//calculeaza inaltimea arborelui care este data de 
-	//lungimea maxima de la radacina pana la cel mai indepartat nod frunza
-	return 0;
+int calculeazaInaltimeArbore(Nod* arbore) {
+	if(arbore == NULL) {
+		return 0;
+	}
+	int inaltimeStanga = calculeazaInaltimeArbore(arbore->st);
+	int inaltimeDreapta = calculeazaInaltimeArbore(arbore->dr);
+	return (inaltimeStanga > inaltimeDreapta ? inaltimeStanga : inaltimeDreapta) + 1;
 }
 
 float calculeazaPretTotal(Nod* arbore) {
-	//calculeaza pretul tuturor masinilor din arbore.
 	if (arbore == NULL) {
 		return 0;
 	}
@@ -166,9 +160,16 @@ float calculeazaPretTotal(Nod* arbore) {
 	return arbore->info.pret + totalStanga + totalDreapta;
 }
 
-float calculeazaPretulMasinilorUnuiSofer(/*arbore de masini*/ const char* numeSofer) {
-	//calculeaza pretul tuturor masinilor unui sofer.
-	return 0;
+float calculeazaPretulMasinilorUnuiSofer(Nod* arbore, const char* numeSofer) {
+	if(arbore == NULL) {
+		return 0;
+	}
+	if(strcmp(arbore->info.numeSofer, numeSofer) == 0) {
+		return arbore->info.pret + calculeazaPretulMasinilorUnuiSofer(arbore->st, numeSofer) + 
+			calculeazaPretulMasinilorUnuiSofer(arbore->dr, numeSofer);
+	}
+	return calculeazaPretulMasinilorUnuiSofer(arbore->st, numeSofer) + 
+		calculeazaPretulMasinilorUnuiSofer(arbore->dr, numeSofer);
 }
 
 int main() {
@@ -184,6 +185,11 @@ int main() {
 
 	float pret = calculeazaPretTotal(radacina);
 	printf("Pretul este: %.2f", pret);
+
+	printf("\nNumarul de noduri este: %d\n", determinaNumarNoduri(radacina));
+	printf("Inaltimea arborelui este: %d\n", calculeazaInaltimeArbore(radacina));
+	printf("Pretul masinilor soferului Gigel este: %.2f\n", calculeazaPretulMasinilorUnuiSofer(radacina, "Gigel"));
+
 	dezalocareArboreDeMasini(&radacina);
 	return 0;
 }

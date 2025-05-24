@@ -169,6 +169,7 @@ void afisareGraf(NodListaPrincipala* graf) {
 			p = p->next;
 		}
 		printf("\n\n");
+
 		graf = graf->next;
 	}
 }
