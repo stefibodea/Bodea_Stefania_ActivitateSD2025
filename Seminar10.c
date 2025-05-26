@@ -3,9 +3,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-//trebuie sa folositi fisierul masini.txt
-//sau va creati un alt fisier cu alte date
-
 struct StructuraMasina {
 	int id;
 	int nrUsi;
@@ -129,7 +126,7 @@ void adaugaMasinaInArboreEchilibrat(Nod** arbore, Masina masinaNoua) {
 	}
 }
 
-void* citireArboreDeMasiniDinFisier(const char* numeFisier) {
+Nod* citireArboreDeMasiniDinFisier(const char* numeFisier) {
 	FILE* f = fopen(numeFisier, "r");
 	Nod* arbore = NULL;
 	while (!feof(f))
