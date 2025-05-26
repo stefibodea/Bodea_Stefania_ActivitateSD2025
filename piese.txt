@@ -1,0 +1,5 @@
+Hamlet,180,1603,9.1
+O scrisoare pierduta,120,1884,8.5
+Romeo si Julieta,150,1597,9.1
+D'ale carnavalului,100,1885,8.3
+Ivan Turbinca,90,1880,8.9

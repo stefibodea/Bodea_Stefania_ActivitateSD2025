@@ -57,5 +57,8 @@
     <ClCompile Include="Task10.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="PiesaTeatru.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
