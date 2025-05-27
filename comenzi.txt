@@ -1,0 +1,6 @@
+1,5 februarie 2025,10 februarie 2025,Bodea Stefania,166.50
+2,4 martie 2015,10 martie 2025,Bodea Lorena,333.33
+3,2 aprilie 2015,22 aprilie 2025,Bodea Stefania,179.50
+4,5 mai 2025,10 mai 2025,Bodea Stefania,500.55
+5,5 decembrie 2024,10 decembrie 2024,Popescu Alexandru,999.99
+6,11 noiembrie 2024,21 noiembrie 2024,Bucur Rebecca,8888.88
