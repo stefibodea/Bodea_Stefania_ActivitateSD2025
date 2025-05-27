@@ -1,0 +1,5 @@
+Lovitura puternica,5,30,atac
+Blocaj scut,3,20,aparare
+Invaluire magica,4,50,speciala
+Evadare rapida,2,10,aparare
+Foc devastator,6,60,atac
